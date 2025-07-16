@@ -28,11 +28,12 @@ def split_text(text, chunk_size=500, overlap=50):
     return chunks
 
 def get_embedding(text):
-    result = openai.Embedding.create(
+    response = openai.embeddings.create(
         model="text-embedding-3-small",
-        input=text
+        input=[text]
     )
-    return result['data'][0]['embedding']
+    return response.data[0].embedding
+
 
 @st.cache_resource
 def build_vector_index(chunks):

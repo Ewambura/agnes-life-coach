@@ -1,5 +1,5 @@
 # agnes_app.py
-
+from openai import OpenAI
 import streamlit as st
 import openai
 import fitz  # PyMuPDF
@@ -57,11 +57,14 @@ def ask_agnes(question, context_chunks):
         {"role": "system", "content": "You are Agnes, a wise and warm life coach. Use this book content to help."},
         {"role": "user", "content": f"{context}\n\nQuestion: {question}"}
     ]
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
+
+    client = openai.OpenAI()  # This creates the proper client object for v1+
+    response = client.chat.completions.create(
+        model="gpt-4",  # or use "gpt-3.5-turbo" if you want faster replies
         messages=messages
     )
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
+
 
 # === STREAMLIT UI ===
 st.title("🌸 Talk to Agnes - Your Life Coach")

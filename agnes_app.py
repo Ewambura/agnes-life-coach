@@ -73,7 +73,8 @@ st.title("🌸 Talk to Agnes - Your Life Coach")
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-user_input = st.text_input("Ask Agnes a life question:")
+user_input = st.chat_input("Ask Agnes something...")
+
 
 if user_input:
     with st.spinner("Agnes is thinking..."):

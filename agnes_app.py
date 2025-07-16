@@ -69,13 +69,28 @@ def ask_agnes(question, context_chunks):
 # === STREAMLIT UI ===
 st.title("🌸 Talk to Agnes - Your Life Coach")
 
-user_question = st.text_input("Ask a life question:", "")
+# Create a chat history in session state
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
-if user_question:
+user_input = st.text_input("Ask Agnes a life question:")
+
+if user_input:
     with st.spinner("Agnes is thinking..."):
         book = load_book()
         chunks = split_text(book)
         index, meta = build_vector_index(chunks)
-        context = search_index(user_question, index, meta)
-        answer = ask_agnes(user_question, context)
-        st.success(answer)
+        context = search_index(user_input, index, meta)
+        answer = ask_agnes(user_input, context)
+
+        # Add to session history
+        st.session_state.chat_history.append(("You", user_input))
+        st.session_state.chat_history.append(("Agnes", answer))
+
+# Display chat history
+if st.session_state.chat_history:
+    for sender, msg in st.session_state.chat_history:
+        if sender == "You":
+            st.markdown(f"**👤 You:** {msg}")
+        else:
+            st.markdown(f"**🧠 Agnes:** {msg}")
